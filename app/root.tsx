@@ -7,8 +7,9 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import "@mantine/core/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
 import { theme } from "./theme";
+import Header from "./components/Header/Header";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <Container
+            fluid
+            py={10}
+            px={{ lg: 50, xl: 100 }}
+            h="100vh"
+            bg={theme.colors.bgPaper[0]}
+          >
+            <Header />
+
+            {children}
+          </Container>
+        </MantineProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
