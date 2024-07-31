@@ -1,4 +1,4 @@
-import { Box, Container } from "@mantine/core";
+import { Button, Container } from "@mantine/core";
 import type { MetaFunction } from "@remix-run/node";
 import Header from "~/components/Header";
 
@@ -11,10 +11,9 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <Container w="lg">
-      <Box bg="var(--mantine-color-blue-light)">
-        All elements inside Center are centered
-      </Box>
+    <Container fluid py={10} h="100%" bg={"var(--mantine-color-blue-light)"}>
+      <Header />
+      <Button>Cherry Pink</Button>
     </Container>
   );
 }
