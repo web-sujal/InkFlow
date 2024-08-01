@@ -10,20 +10,24 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { Form, Link, useNavigation } from "@remix-run/react";
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 
 import classes from "./AuthForm.module.css";
+import { AuthErrors } from "~/types";
 
 interface AuthFormProps {
   type: "login" | "signup";
 }
 
 const AuthForm = ({ type }: AuthFormProps) => {
+  const actionData = useActionData<{ errors?: AuthErrors }>();
+  const formErrors = actionData?.errors || {};
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
 
   return (
-    // fix margin top styles later bases on screen size
+    // TODO: fix margin top styles later bases on screen size
     <Container size={420} mt={75}>
       <Title ta="center" className={classes.title}>
         Welcome back!
@@ -49,48 +53,72 @@ const AuthForm = ({ type }: AuthFormProps) => {
       </Text>
 
       {/* Form */}
-      <Paper
-        component={Form}
-        method="post"
-        withBorder
-        shadow="md"
-        p={30}
-        mt={30}
-        radius="md"
-      >
-        {/* First Name && Last Name */}
-        {type === "signup" && (
-          <>
-            <TextInput label="First Name" name="first_name" placeholder="John" required />
-            <TextInput label="Last Name" name="last_name" placeholder="Doe" mt="md" required />
-          </>
-        )}
 
-        {/* Email */}
-        <TextInput label="Email" name="email" placeholder="you@gmail.com" mt="md" required />
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Form method="post">
+          {/* First Name && Last Name */}
+          {type === "signup" && (
+            <>
+              <TextInput
+                label="First Name"
+                name="first_name"
+                placeholder="John"
+                error={formErrors?.first_name}
+                required
+              />
+              <TextInput
+                label="Last Name"
+                name="last_name"
+                placeholder="Doe"
+                mt="md"
+                error={formErrors?.last_name}
+                required
+              />
+            </>
+          )}
 
-        {/* Password */}
-        <PasswordInput
-          label="Password"
-          placeholder="Your password"
-          name="password"
-          required
-          mt="md"
-        />
+          {/* Email */}
+          <TextInput
+            label="Email"
+            name="email"
+            placeholder="you@gmail.com"
+            mt="md"
+            error={formErrors?.email}
+            required
+          />
 
-        {/* Remember me && Forgot Password */}
-        <Group justify="space-between" mt="lg">
-          <Checkbox label="Remember me" name="remember_me" /> {/* TODO: add fn later */}
-          <Anchor component={Link} to="/forgot-password" size="sm">
-            Forgot password?
-          </Anchor>
-        </Group>
+          {/* Password */}
+          <PasswordInput
+            label="Password"
+            placeholder="Your password"
+            name="password"
+            mt="md"
+            error={formErrors?.password}
+            required
+          />
 
-        {/* Submit Button */}
-        <Button type="submit" fullWidth mt="xl">
-          {type === "login" && (isSubmitting ? "Logging in..." : "Log in")}
-          {type === "signup" && (isSubmitting ? "Creating..." : "Sign up")}
-        </Button>
+          {/* Remember me && Forgot Password */}
+          <Group justify="space-between" mt="lg">
+            <Checkbox label="Remember me" name="remember_me" />{" "}
+            {/* TODO: add fn later */}
+            <Anchor component={Link} to="/forgot-password" size="sm">
+              Forgot password?
+            </Anchor>
+          </Group>
+
+          {/* Submit Button */}
+          <Button type="submit" fullWidth mt="xl">
+            {type === "login" && (isSubmitting ? "Logging in..." : "Log in")}
+            {type === "signup" && (isSubmitting ? "Registering..." : "Sign up")}
+          </Button>
+
+          {/* Invalid Credentials Error */}
+          {formErrors.invalidCredentials && (
+            <Text c="red" size="sm" mt="md">
+              {formErrors.invalidCredentials}
+            </Text>
+          )}
+        </Form>
       </Paper>
     </Container>
   );
