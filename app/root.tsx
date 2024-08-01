@@ -8,6 +8,7 @@ import {
 import "./tailwind.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
+
 import { theme } from "./theme";
 import Header from "./components/Header/Header";
 

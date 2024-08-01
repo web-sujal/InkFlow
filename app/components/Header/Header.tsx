@@ -75,6 +75,7 @@ export default function HeaderSearch() {
               label={link.label}
               variant="subtle"
               className={classes.btn}
+              onClick={toggle}
             />
           ))}
 
@@ -83,10 +84,16 @@ export default function HeaderSearch() {
             to="/login"
             variant="subtle"
             w="100px"
+            onClick={toggle}
           >
             Log in
           </Button>
-          <Button component={NavLinkRemix} to="/signup" w="100px">
+          <Button
+            component={NavLinkRemix}
+            onClick={toggle}
+            to="/signup"
+            w="100px"
+          >
             Sign up
           </Button>
           <Button variant="outline" onClick={toggle} w="100px">
