@@ -40,6 +40,7 @@ const ForgotPassword = () => {
         <TextInput
           label="Your email"
           placeholder="johndoe@gmail.com"
+          name="email"
           required
         />
 

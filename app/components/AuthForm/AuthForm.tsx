@@ -58,25 +58,29 @@ const AuthForm = ({ type }: AuthFormProps) => {
         mt={30}
         radius="md"
       >
-        {/* Full Name */}
+        {/* First Name && Last Name */}
         {type === "signup" && (
-          <TextInput label="Full Name" placeholder="John Doe" required />
+          <>
+            <TextInput label="First Name" name="first_name" placeholder="John" required />
+            <TextInput label="Last Name" name="last_name" placeholder="Doe" mt="md" required />
+          </>
         )}
 
         {/* Email */}
-        <TextInput label="Email" placeholder="you@gmail.com" mt="md" required />
+        <TextInput label="Email" name="email" placeholder="you@gmail.com" mt="md" required />
 
         {/* Password */}
         <PasswordInput
           label="Password"
           placeholder="Your password"
+          name="password"
           required
           mt="md"
         />
 
         {/* Remember me && Forgot Password */}
         <Group justify="space-between" mt="lg">
-          <Checkbox label="Remember me" /> {/* TODO: add fn later */}
+          <Checkbox label="Remember me" name="remember_me" /> {/* TODO: add fn later */}
           <Anchor component={Link} to="/forgot-password" size="sm">
             Forgot password?
           </Anchor>
