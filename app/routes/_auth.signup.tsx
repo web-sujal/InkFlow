@@ -5,6 +5,7 @@ import { ValidationError } from "yup";
 import AuthForm from "~/components/AuthForm/AuthForm";
 import directus from "~/lib/directus.server";
 import { AuthErrors } from "~/types";
+import { createErrorObj } from "~/utils/helpers";
 import { signupSchema } from "~/validations/AuthValidation";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -30,14 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return redirect("/login");
   } catch (error) {
     if (error instanceof ValidationError) {
-      const errors: AuthErrors = {};
-
-      // checking for errors and creating error obj
-      error.inner.forEach((validationError) => {
-        validationError.path && // checking if validationError.path exists
-          (errors[validationError.path as keyof AuthErrors] =
-            validationError.message);
-      });
+      const errors: AuthErrors = createErrorObj(error);
       return json({ errors }, { status: 400 });
     }
 
