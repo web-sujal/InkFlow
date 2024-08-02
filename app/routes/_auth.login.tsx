@@ -2,7 +2,7 @@ import { readMe } from "@directus/sdk";
 import {
   ActionFunctionArgs,
   json,
-  LoaderFunctionArgs,
+  // LoaderFunctionArgs,
   redirect,
 } from "@remix-run/node";
 import { ValidationError } from "yup";
@@ -10,25 +10,25 @@ import { ValidationError } from "yup";
 import AuthForm from "~/components/AuthForm/AuthForm";
 import directus from "~/lib/directus.server";
 import { AuthErrors } from "~/types";
-import { createErrorObj } from "~/utils/helpers";
+import { createAuthErrorObj } from "~/utils/helpers";
 import { loginSchema } from "~/validations/AuthValidation";
 import { commitSession, getSession } from "../sessions";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("cookie"));
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const session = await getSession(request.headers.get("cookie"));
 
-  if (session.has("userId")) {
-    return redirect("/");
-  }
+//   if (session.has("userId")) {
+//     return redirect("/");
+//   }
 
-  const data = { error: session.get("error") };
+//   const data = { error: session.get("error") };
 
-  return json(data, {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
-}
+//   return json(data, {
+//     headers: {
+//       "Set-Cookie": await commitSession(session),
+//     },
+//   });
+// }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("cookie"));
@@ -76,7 +76,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   } catch (error) {
     if (error instanceof ValidationError) {
-      const errors: AuthErrors = createErrorObj(error);
+      const errors: AuthErrors = createAuthErrorObj(error);
       return json({ errors }, { status: 400 });
     }
 

@@ -1,7 +1,15 @@
-import { Button, Container, Paper, TextInput, Title } from "@mantine/core";
-import { Form, useNavigation, useOutletContext } from "@remix-run/react";
+import {
+  Button,
+  Paper,
+  Stack,
+  Textarea,
+  TextInput,
+  Title,
+  Text,
+} from "@mantine/core";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 
-import { Blog } from "~/types";
+import { Blog, BlogErrors } from "~/types";
 import classes from "./BlogForm.module.css";
 
 interface BlogFormProps {
@@ -10,38 +18,59 @@ interface BlogFormProps {
 }
 
 const BlogForm = ({ type, blog }: BlogFormProps) => {
-  // const actionData = useActionData<{ errors?: BlogErrors }>();
-  // const formErrors = actionData?.errors || {};
-  const userId = useOutletContext();
+  const actionData = useActionData<{ errors?: BlogErrors }>();
+  const formErrors = actionData?.errors || {};
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
 
   return (
-    <Container size={420} mt={75}>
+    <Stack mt={50} gap={20} pb={50} w="100%">
       <Title ta="center" className={classes.title}>
         {type === "create" ? "Let your thoughts flow" : "Edit post"}
       </Title>
 
       {/* Form */}
-      <Paper withBorder shadow="md" p={30} mt={10} radius="md">
+      <Paper
+        withBorder
+        shadow="md"
+        w="80vw"
+        mx="auto"
+        p={30}
+        mt={10}
+        radius="md"
+      >
         <Form method="post">
           {/* Title */}
           <TextInput
             label="Title"
             name="title"
-            placeholder="Why inkflow is the best blog platform."
-            // error={formErrors?.first_name}
+            placeholder="Try writing something unique and captivating."
+            error={formErrors?.title}
+            defaultValue={blog?.title || ""}
             required
           />
 
-          {/* Content */}
-          <TextInput
+          {/* Content Textarea */}
+          <Textarea
+            mt="xl"
             label="Content"
             name="content"
-            placeholder="becaue it provides the best ui/ux and is totally free :)"
-            mt="md"
-            // error={formErrors?.last_name}
+            withAsterisk
+            defaultValue={blog?.content || ""}
+            error={formErrors?.content}
+            placeholder="what's on your mind..."
+            rows={4}
+          />
+
+          {/* Full Name */}
+          <TextInput
+            mt="xl"
+            label="Full Name"
+            name="full_name"
+            defaultValue={blog?.full_name || ""}
+            // disabled
+            error={formErrors?.full_name}
             required
           />
 
@@ -53,15 +82,28 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
           </Button>
 
           {/* Invalid Credentials Error */}
-          {/* {formErrors.invalidCredentials && (
+          {formErrors.unknown_error && (
             <Text c="red" size="sm" mt="md">
-              {formErrors.invalidCredentials}
+              {formErrors.unknown_error}
             </Text>
-          )} */}
+          )}
         </Form>
       </Paper>
-    </Container>
+    </Stack>
   );
 };
 
 export default BlogForm;
+
+/*
+    Content 
+  <Box mt="xl">
+    <Text>
+      Content{" "}
+      <Text component="span" c="red">
+        *
+      </Text>
+    </Text>
+    <RichTextEditorComp />
+  </Box> 
+*/

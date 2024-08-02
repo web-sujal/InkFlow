@@ -2,11 +2,11 @@ import { authentication, createDirectus, rest } from "@directus/sdk";
 import { Blog } from "~/types";
 
 type Schema = {
-  blogs: Blog[];
+  Blogs: Blog[];
 };
 
 const directus = createDirectus<Schema>(process.env.DIRECTUS_URL || "")
-  .with(authentication("json"))
-  .with(rest());
+  .with(rest())
+  .with(authentication("json"));
 
 export default directus;

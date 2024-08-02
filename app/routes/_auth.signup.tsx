@@ -5,7 +5,7 @@ import { ValidationError } from "yup";
 import AuthForm from "~/components/AuthForm/AuthForm";
 import directus from "~/lib/directus.server";
 import { AuthErrors } from "~/types";
-import { createErrorObj } from "~/utils/helpers";
+import { createAuthErrorObj } from "~/utils/helpers";
 import { signupSchema } from "~/validations/AuthValidation";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -31,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return redirect("/login");
   } catch (error) {
     if (error instanceof ValidationError) {
-      const errors: AuthErrors = createErrorObj(error);
+      const errors: AuthErrors = createAuthErrorObj(error);
       return json({ errors }, { status: 400 });
     }
 

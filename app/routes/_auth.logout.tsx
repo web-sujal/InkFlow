@@ -5,14 +5,11 @@ import { logout } from "@directus/sdk";
 import { destroySession, getSession } from "../sessions";
 import directus from "~/lib/directus.server";
 
-export const loader = async () => {
-  return redirect("/");
-};
-
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const refresh_token = session.get("refresh_token");
 
+  console.log("initiating log in: ", refresh_token);
   try {
     // refresh_token && (await directus.setToken(refresh_token));
     // await directus.logout();
@@ -25,6 +22,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       },
     });
   } catch (error) {
+    console.log("logout failed.");
     return json(
       { error: "Something went wrong while logging out." },
       { status: 500 }

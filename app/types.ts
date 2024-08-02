@@ -9,9 +9,10 @@ export interface Blog {
   title: string;
   content: string;
   created_at: string;
-  imageUrl?: string;
+  image_url?: string;
   featured_image?: string; // TODO: make new interface of type DirectusImage
-  author: User;
+  full_name: string;
+  author: string;
 }
 
 export interface BlogErrors {
@@ -19,6 +20,8 @@ export interface BlogErrors {
   content?: string;
   imageUrl?: string;
   featured_image?: string;
+  full_name?: string;
+  unknown_error?: string;
 }
 
 export interface AuthErrors {

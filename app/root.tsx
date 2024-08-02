@@ -11,6 +11,7 @@ import "./tailwind.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
 import { LoaderFunctionArgs } from "@remix-run/node";
+import "@mantine/tiptap/styles.css";
 
 import { theme } from "./theme";
 import { getSession } from "./sessions";
