@@ -31,6 +31,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export function Layout() {
   const userId = useLoaderData<typeof loader>();
+  console.log("userId root: ", userId);
 
   return (
     <html lang="en">
