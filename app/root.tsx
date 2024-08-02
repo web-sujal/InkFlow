@@ -51,7 +51,7 @@ export function Layout() {
             h="100vh"
             bg={theme.colors.bgPaper[0]}
           >
-            <Header />
+            <Header userId={userId} />
 
             <Outlet context={userId} />
           </Container>

@@ -8,12 +8,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Link,
-  NavLink as NavLinkRemix,
-  useOutletContext,
-  useSubmit,
-} from "@remix-run/react";
+import { Link, NavLink as NavLinkRemix, useSubmit } from "@remix-run/react";
 
 import classes from "./Header.module.css";
 
@@ -23,9 +18,13 @@ const links = [
   { path: "/pricing", label: "Pricing" },
 ];
 
-export default function HeaderSearch() {
+interface HeaderProps {
+  userId: string | null;
+}
+
+export const Header = ({ userId }: HeaderProps) => {
   const [opened, { toggle }] = useDisclosure(false);
-  const userId = useOutletContext();
+
   console.log("userId header: ", userId);
 
   const submit = useSubmit();
@@ -64,7 +63,7 @@ export default function HeaderSearch() {
             <Button
               component={Link}
               to="/blogs/create"
-              variant="outline"
+              variant="subtle"
               visibleFrom="md"
             >
               Create Post
@@ -111,7 +110,12 @@ export default function HeaderSearch() {
           {/* CTA */}
           {userId ? (
             <>
-              <Button component={Link} to="/blogs/create" variant="outline">
+              <Button
+                component={Link}
+                to="/blogs/create"
+                variant="subtle"
+                w="100px"
+              >
                 Create Post
               </Button>
               <Button onClick={handleLogout}>Logout</Button>
@@ -135,4 +139,6 @@ export default function HeaderSearch() {
       </Drawer>
     </Group>
   );
-}
+};
+
+export default Header;
