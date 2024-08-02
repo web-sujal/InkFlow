@@ -1,18 +1,37 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
+import { LoaderFunctionArgs } from "@remix-run/node";
 
 import { theme } from "./theme";
 import Header from "./components/Header/Header";
+import { getSession } from "./sessions";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("cookie"));
+
+  let userId = null;
+
+  if (session.has("userId")) {
+    userId = session.get("userId");
+    return json(userId);
+  }
+
+  return json(userId);
+};
+
+export function Layout() {
+  const userId = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -33,7 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           >
             <Header />
 
-            {children}
+            <Outlet context={userId} />
           </Container>
         </MantineProvider>
         <ScrollRestoration />
