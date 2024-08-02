@@ -13,8 +13,8 @@ import { ColorSchemeScript, Container, MantineProvider } from "@mantine/core";
 import { LoaderFunctionArgs } from "@remix-run/node";
 
 import { theme } from "./theme";
-import Header from "./components/Header/Header";
 import { getSession } from "./sessions";
+import Header from "./components/Header/Header";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("cookie"));
@@ -31,7 +31,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export function Layout() {
   const userId = useLoaderData<typeof loader>();
-  console.log("userId root: ", userId);
 
   return (
     <html lang="en">
