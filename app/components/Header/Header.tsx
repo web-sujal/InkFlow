@@ -1,14 +1,19 @@
 import {
   Burger,
   Button,
+  Drawer,
   Group,
   NavLink,
-  Title,
-  Drawer,
   Stack,
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, NavLink as NavLinkRemix } from "@remix-run/react";
+import {
+  Link,
+  NavLink as NavLinkRemix,
+  useOutletContext,
+  useSubmit,
+} from "@remix-run/react";
 
 import classes from "./Header.module.css";
 
@@ -20,6 +25,14 @@ const links = [
 
 export default function HeaderSearch() {
   const [opened, { toggle }] = useDisclosure(false);
+  const userId = useOutletContext();
+  console.log("userId header: ", userId);
+
+  const submit = useSubmit();
+
+  const handleLogout = () => {
+    submit(null, { action: "/logout", method: "post" });
+  };
 
   return (
     <Group grow component="header" align="center" justify="space-between">
@@ -46,17 +59,33 @@ export default function HeaderSearch() {
 
       {/* Login Signup */}
       <Group justify="flex-end" visibleFrom="sm">
-        <Button
-          component={NavLinkRemix}
-          to="/login"
-          variant="subtle"
-          visibleFrom="md"
-        >
-          Log in
-        </Button>
-        <Button component={NavLinkRemix} to="/signup">
-          Sign up
-        </Button>
+        {userId ? (
+          <>
+            <Button
+              component={Link}
+              to="/blogs/create"
+              variant="outline"
+              visibleFrom="md"
+            >
+              Create Post
+            </Button>
+            <Button onClick={handleLogout}>Logout</Button>
+          </>
+        ) : (
+          <>
+            <Button
+              component={Link}
+              to="/login"
+              variant="subtle"
+              visibleFrom="md"
+            >
+              Log in
+            </Button>
+            <Button component={Link} to="/signup">
+              Sign up
+            </Button>
+          </>
+        )}
       </Group>
 
       {/* Mobile menu */}
@@ -79,23 +108,26 @@ export default function HeaderSearch() {
             />
           ))}
 
-          <Button
-            component={NavLinkRemix}
-            to="/login"
-            variant="subtle"
-            w="100px"
-            onClick={toggle}
-          >
-            Log in
-          </Button>
-          <Button
-            component={NavLinkRemix}
-            onClick={toggle}
-            to="/signup"
-            w="100px"
-          >
-            Sign up
-          </Button>
+          {/* CTA */}
+          {userId ? (
+            <>
+              <Button component={Link} to="/blogs/create" variant="outline">
+                Create Post
+              </Button>
+              <Button onClick={handleLogout}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <Button component={Link} to="/login" variant="subtle" w="100px">
+                Log in
+              </Button>
+              <Button component={Link} to="/signup" w="100px">
+                Sign up
+              </Button>
+            </>
+          )}
+
+          {/* Cloose icon */}
           <Button variant="outline" onClick={toggle} w="100px">
             X
           </Button>
