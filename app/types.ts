@@ -14,10 +14,11 @@ export interface Blog {
   author: User;
 }
 
-export interface ErrorsType {
+export interface BlogErrors {
   title?: string;
   content?: string;
   imageUrl?: string;
+  featured_image?: string;
 }
 
 export interface AuthErrors {
