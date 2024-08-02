@@ -8,7 +8,12 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, NavLink as NavLinkRemix, useSubmit } from "@remix-run/react";
+import {
+  Link,
+  NavLink as NavLinkRemix,
+  useFetcher,
+  // useSubmit,
+} from "@remix-run/react";
 
 import classes from "./Header.module.css";
 
@@ -25,13 +30,12 @@ interface HeaderProps {
 export const Header = ({ userId }: HeaderProps) => {
   const [opened, { toggle }] = useDisclosure(false);
 
-  console.log("userId header: ", userId);
+  // const submit = useSubmit();
+  const fetcher = useFetcher();
 
-  const submit = useSubmit();
-
-  const handleLogout = () => {
-    submit(null, { action: "/logout", method: "post" });
-  };
+  // const handleLogout = () => {
+  //   submit(null, { action: "/logout", method: "post" });
+  // };
 
   return (
     <Group grow component="header" align="center" justify="space-between">
@@ -68,7 +72,9 @@ export const Header = ({ userId }: HeaderProps) => {
             >
               Create Post
             </Button>
-            <Button onClick={handleLogout}>Logout</Button>
+            <fetcher.Form method="post" action="/logout">
+              <Button type="submit">Logout</Button>
+            </fetcher.Form>
           </>
         ) : (
           <>
@@ -118,9 +124,11 @@ export const Header = ({ userId }: HeaderProps) => {
               >
                 Create Post
               </Button>
-              <Button onClick={handleLogout} w="100px">
-                Logout
-              </Button>
+              <fetcher.Form method="post" action="/logout">
+                <Button type="submit" w="100px">
+                  Logout
+                </Button>
+              </fetcher.Form>
             </>
           ) : (
             <>
