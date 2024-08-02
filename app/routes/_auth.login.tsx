@@ -18,7 +18,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
 
   if (session.has("userId")) {
-    // Redirect to the home page if they are already signed in.
     return redirect("/");
   }
 
