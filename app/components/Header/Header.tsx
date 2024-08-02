@@ -114,15 +114,17 @@ export const Header = ({ userId }: HeaderProps) => {
                 component={Link}
                 to="/blogs/create"
                 variant="subtle"
-                w="100px"
+                w="100%"
               >
                 Create Post
               </Button>
-              <Button onClick={handleLogout}>Logout</Button>
+              <Button onClick={handleLogout} w="100px">
+                Logout
+              </Button>
             </>
           ) : (
             <>
-              <Button component={Link} to="/login" variant="subtle" w="100px">
+              <Button component={Link} to="/login" variant="subtle" w="100%">
                 Log in
               </Button>
               <Button component={Link} to="/signup" w="100px">
