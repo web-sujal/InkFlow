@@ -2,12 +2,17 @@ import {
   Button,
   Paper,
   Stack,
+  Text,
   Textarea,
   TextInput,
   Title,
-  Text,
 } from "@mantine/core";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 
 import { Blog, BlogErrors } from "~/types";
 import classes from "./BlogForm.module.css";
@@ -23,6 +28,16 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
+
+  const submit = useSubmit();
+
+  const handleDelete = () => {
+    const response = confirm("Please confirm you want to delete this task.");
+
+    if (response) {
+      submit(null, { method: "delete", action: `/delete/${blog?.id}` });
+    }
+  };
 
   return (
     <Stack mt={50} gap={20} pb={50} w="100%">
@@ -80,6 +95,19 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
               (isSubmitting ? "Creating..." : "Create Post")}
             {type === "edit" && (isSubmitting ? "Updating..." : "Update Post")}
           </Button>
+
+          {/* Delete Button */}
+          {type === "edit" && (
+            <Button
+              type="button"
+              onClick={handleDelete}
+              bg="red"
+              fullWidth
+              mt="sm"
+            >
+              Delete
+            </Button>
+          )}
 
           {/* Invalid Credentials Error */}
           {formErrors.unknown_error && (

@@ -6,3 +6,7 @@
 .drawer {
   height: "100%";
 }
+
+.btnContainer {
+  flex-shrink: none;
+}

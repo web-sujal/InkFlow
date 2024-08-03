@@ -61,7 +61,11 @@ export const Header = ({ userId }: HeaderProps) => {
       </Group>
 
       {/* Login Signup */}
-      <Group justify="flex-end" visibleFrom="sm">
+      <Group
+        justify="flex-end"
+        visibleFrom="sm"
+        className={classes.btnContainer}
+      >
         {userId ? (
           <>
             <Button

@@ -15,8 +15,8 @@ type SessionFlashData = {
 export const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>({
     cookie: {
-      name: "user-session",
-      secrets: ["inkfl0w"],
+      name: "__session",
+      secrets: [process.env.SESSION_SECRET!],
 
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,

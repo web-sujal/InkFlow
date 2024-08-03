@@ -34,6 +34,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
+  console.log("blog_.edit.&id action lol");
   const id = params.id;
   invariant(id, "Missing id in params");
 
