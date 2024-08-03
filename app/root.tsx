@@ -16,22 +16,27 @@ import "@mantine/tiptap/styles.css";
 import { theme } from "./theme";
 import { getSession } from "./sessions";
 import Header from "./components/Header/Header";
+import { User } from "./types";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get("cookie"));
 
-  let userId = null;
+  const user: User = {};
 
   if (session.has("userId")) {
-    userId = session.get("userId");
-    return json(userId);
+    user.userId = session.get("userId");
+    user.first_name = session.get("first_name");
+    user.last_name = session.get("last_name");
+    user.email = session.get("email");
+
+    return json(user);
   }
 
-  return json(userId);
+  return json(user);
 };
 
 export function Layout() {
-  const userId = useLoaderData<typeof loader>();
+  const user = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">
@@ -51,9 +56,9 @@ export function Layout() {
             h="100vh"
             bg={theme.colors.bgPaper[0]}
           >
-            <Header userId={userId} />
+            <Header user={user} />
 
-            <Outlet context={userId} />
+            <Outlet context={user} />
           </Container>
         </MantineProvider>
         <ScrollRestoration />

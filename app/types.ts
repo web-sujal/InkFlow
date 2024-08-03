@@ -1,7 +1,8 @@
 export interface User {
-  first_name: string;
-  last_name: string;
-  email: string;
+  first_name?: string;
+  last_name?: string;
+  userId?: string;
+  email?: string;
 }
 
 export interface Blog {

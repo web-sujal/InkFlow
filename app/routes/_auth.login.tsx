@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
-  const email = String(formData.get("email"));
+  const inputEmail = String(formData.get("email"));
   const password = String(formData.get("password"));
 
   try {
@@ -44,12 +44,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     // logging user
     const { access_token, expires, expires_at, refresh_token } =
-      await directus.login(email, password);
+      await directus.login(inputEmail, password);
 
     // fetch userId
     await directus.setToken(access_token);
     const userData = await directus.request(readMe());
     const userId = userData.id;
+    const first_name = userData.first_name;
+    const last_name = userData.last_name;
+    const email = userData.email;
 
     if (userId == null) {
       session.flash("error", "Invalid username/password");
@@ -67,7 +70,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     expires && session.set("expires", String(expires));
     expires_at && session.set("expires_at", String(expires_at));
     refresh_token && session.set("refresh_token", refresh_token);
-    session.set("userId", userId);
+
+    session.set("userId", userData.id);
+    first_name && session.set("first_name", first_name);
+    last_name && session.set("last_name", last_name);
+    email && session.set("email", email);
 
     return redirect("/", {
       headers: {

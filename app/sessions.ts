@@ -6,6 +6,9 @@ type SessionData = {
   expires_at: string;
   refresh_token: string;
   userId: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 };
 
 type SessionFlashData = {

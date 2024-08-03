@@ -11,10 +11,11 @@ import {
   Form,
   useActionData,
   useNavigation,
+  useOutletContext,
   useSubmit,
 } from "@remix-run/react";
 
-import { Blog, BlogErrors } from "~/types";
+import { Blog, BlogErrors, User } from "~/types";
 import classes from "./BlogForm.module.css";
 
 interface BlogFormProps {
@@ -29,6 +30,7 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
 
+  const user = useOutletContext<User>();
   const submit = useSubmit();
 
   const handleDelete = () => {
@@ -83,7 +85,7 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
             mt="xl"
             label="Full Name"
             name="full_name"
-            defaultValue={blog?.full_name || ""}
+            defaultValue={type === "edit" ? blog?.full_name : `${user.first_name} ${user.last_name}`}
             // disabled
             error={formErrors?.full_name}
             required

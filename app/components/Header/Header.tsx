@@ -16,6 +16,7 @@ import {
 } from "@remix-run/react";
 
 import classes from "./Header.module.css";
+import { User } from "~/types";
 
 const links = [
   { path: "/", label: "Home" },
@@ -24,10 +25,10 @@ const links = [
 ];
 
 interface HeaderProps {
-  userId: string | null;
+  user: User | null;
 }
 
-export const Header = ({ userId }: HeaderProps) => {
+export const Header = ({ user }: HeaderProps) => {
   const [opened, { toggle }] = useDisclosure(false);
 
   // const submit = useSubmit();
@@ -66,7 +67,7 @@ export const Header = ({ userId }: HeaderProps) => {
         visibleFrom="sm"
         className={classes.btnContainer}
       >
-        {userId ? (
+        {user?.userId ? (
           <>
             <Button
               component={Link}
@@ -118,7 +119,7 @@ export const Header = ({ userId }: HeaderProps) => {
           ))}
 
           {/* CTA */}
-          {userId ? (
+          {user?.userId ? (
             <>
               <Button
                 component={Link}
