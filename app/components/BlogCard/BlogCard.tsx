@@ -1,7 +1,7 @@
 import { Card, Center, Group, Text } from "@mantine/core";
 import { Link, useOutletContext } from "@remix-run/react";
 
-import { Blog } from "~/types";
+import { Blog, User } from "~/types";
 import classes from "./BlogCard.module.css";
 
 interface BlogCardProps {
@@ -9,7 +9,7 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({ blog }: BlogCardProps) => {
-  const userId = useOutletContext();
+  const user = useOutletContext<User>();
 
   return (
     <Card
@@ -23,7 +23,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
         className={classes.image}
         style={{
           // TODO: update url from blog
-          backgroundImage: `url(https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80)`,
+          backgroundImage: `url(${blog.image_url})`,
         }}
       />
       <div className={classes.overlay} />
@@ -47,7 +47,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
             </Text>
 
             {/* edit and delete blog */}
-            {userId === blog.author && (
+            {user.userId === blog.author && (
               <Group gap="lg">
                 <Center>
                   <Text
