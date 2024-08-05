@@ -40,6 +40,8 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
   const user = useOutletContext<User>();
   const submit = useSubmit();
 
+  const defaultContent = blog?.content || "<p>welcome to inkflow</p>";
+
   const handleDelete = () => {
     const response = confirm("Please confirm you want to delete this task.");
 
@@ -87,7 +89,7 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
               *
             </Text>
           </Text>
-          <Tiptap description="welcome to inkflow" onChange={setContent} />
+          <Tiptap content={defaultContent} onChange={setContent} />
 
           <input
             name="content"
