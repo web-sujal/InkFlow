@@ -10,11 +10,11 @@ import SubScript from "@tiptap/extension-subscript";
 import { SetStateAction } from "react";
 
 interface TipTapProps {
-  description: string;
+  content: string;
   onChange: React.Dispatch<SetStateAction<string>>;
 }
 
-const Tiptap = ({ description, onChange }: TipTapProps) => {
+const Tiptap = ({ content, onChange }: TipTapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -25,7 +25,7 @@ const Tiptap = ({ description, onChange }: TipTapProps) => {
       Highlight,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
-    content: description,
+    content,
 
     editorProps: {
       attributes: {
