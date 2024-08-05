@@ -1,6 +1,8 @@
 import {
   Button,
+  FileInput,
   Paper,
+  rem,
   Stack,
   Text,
   Textarea,
@@ -17,6 +19,8 @@ import {
 
 import { Blog, BlogErrors, User } from "~/types";
 import classes from "./BlogForm.module.css";
+import { useState } from "react";
+import { IconFileCv } from "@tabler/icons-react";
 
 interface BlogFormProps {
   blog?: Blog;
@@ -26,6 +30,8 @@ interface BlogFormProps {
 const BlogForm = ({ type, blog }: BlogFormProps) => {
   const actionData = useActionData<{ errors?: BlogErrors }>();
   const formErrors = actionData?.errors || {};
+
+  const [value, setValue] = useState<File | null>(null);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
@@ -57,7 +63,7 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
         mt={10}
         radius="md"
       >
-        <Form method="post">
+        <Form method="post" encType="multipart/form-data">
           {/* Title */}
           <TextInput
             label="Title"
@@ -80,12 +86,34 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
             rows={4}
           />
 
+          {/* Feature Image */}
+          <FileInput
+            mt="xl"
+            label="Feature Image"
+            name="featured_image"
+            placeholder="Please select an image for your blog post"
+            value={value}
+            onChange={setValue}
+            accept="image/png,image/jpeg"
+            // error="Invalid name"
+            rightSection={
+              <IconFileCv
+                style={{ width: rem(18), height: rem(18) }}
+                stroke={1.5}
+              />
+            }
+          />
+
           {/* Full Name */}
           <TextInput
             mt="xl"
             label="Full Name"
             name="full_name"
-            defaultValue={type === "edit" ? blog?.full_name : `${user.first_name} ${user.last_name}`}
+            defaultValue={
+              type === "edit"
+                ? blog?.full_name
+                : `${user.first_name} ${user.last_name}`
+            }
             // disabled
             error={formErrors?.full_name}
             required
