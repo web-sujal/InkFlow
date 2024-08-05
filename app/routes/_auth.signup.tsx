@@ -1,4 +1,4 @@
-import { registerUser } from "@directus/sdk";
+import { createUser } from "@directus/sdk";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { ValidationError } from "yup";
 
@@ -20,12 +20,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await signupSchema.validate(data, { abortEarly: false });
 
+    const role = process.env.AUTHOR_ROLE_ID;
+
     // create user
     await directus.request(
-      registerUser(email, password, {
-        first_name,
-        last_name,
-      })
+      createUser({ email, password, first_name, last_name, role })
     );
 
     return redirect("/login");
@@ -36,7 +35,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     return json(
-      { errors: { invalidCredentials: "An unknown error occurred" } },
+      {
+        errors: { invalidCredentials: "User with this email already exists." },
+      },
       { status: 500 }
     );
   }
