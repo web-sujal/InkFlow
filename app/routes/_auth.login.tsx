@@ -90,7 +90,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json(
       {
         errors: {
-          invalidCredentials: "Invalid Credentials. Please retry again.",
+          invalidCredentials: "Invalid Credentials. Please retry.",
         },
       },
       { status: 500 }
