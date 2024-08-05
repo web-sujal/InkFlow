@@ -28,7 +28,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
 
   return (
     // TODO: fix margin top styles later bases on screen size
-    <Container size={420} mt={75}>
+    <Container size={420} mt={50} pb={50}>
       <Title ta="center" className={classes.title}>
         Welcome back!
       </Title>
