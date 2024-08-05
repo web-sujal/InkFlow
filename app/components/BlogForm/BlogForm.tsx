@@ -1,12 +1,11 @@
 import {
   Button,
   FileInput,
+  Image,
   Paper,
   rem,
   Stack,
   Text,
-  Textarea,
-  Image,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -19,7 +18,9 @@ import {
 } from "@remix-run/react";
 
 import { IconFileCv } from "@tabler/icons-react";
+import { useState } from "react";
 import { Blog, BlogErrors, User } from "~/types";
+import Tiptap from "../TipTap/TipTap";
 import classes from "./BlogForm.module.css";
 
 interface BlogFormProps {
@@ -30,6 +31,8 @@ interface BlogFormProps {
 const BlogForm = ({ type, blog }: BlogFormProps) => {
   const actionData = useActionData<{ errors?: BlogErrors }>();
   const formErrors = actionData?.errors || {};
+
+  const [content, setContent] = useState("");
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
@@ -74,18 +77,23 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
             error={formErrors?.title}
             defaultValue={blog?.title || ""}
             required
+            mb="xl"
           />
 
-          {/* Content Textarea */}
-          <Textarea
-            mt="xl"
-            label="Content"
+          {/* content rich text area */}
+          <Text fz="sm" fw={500}>
+            Content{" "}
+            <Text component="span" fz="xs" c="red">
+              *
+            </Text>
+          </Text>
+          <Tiptap description="welcome to inkflow" onChange={setContent} />
+
+          <input
             name="content"
-            withAsterisk
+            value={content}
             defaultValue={blog?.content || ""}
-            error={formErrors?.content}
-            placeholder="what's on your mind..."
-            rows={4}
+            hidden
           />
 
           {/* Feature Image */}
@@ -164,4 +172,18 @@ export default BlogForm;
     </Text>
     <RichTextEditorComp />
   </Box> 
+
+  
+            Content Textarea 
+            <Textarea
+            mt="xl"
+            label="Content"
+            name="content"
+            withAsterisk
+            defaultValue={blog?.content || ""}
+            error={formErrors?.content}
+            placeholder="what's on your mind..."
+            rows={4}
+          /> 
+  
 */
