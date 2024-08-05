@@ -88,7 +88,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     return json(
-      { errors: { invalidCredentials: "An unknown error occurred" } },
+      {
+        errors: {
+          invalidCredentials: "Invalid Credentials. Please retry again.",
+        },
+      },
       { status: 500 }
     );
   }
