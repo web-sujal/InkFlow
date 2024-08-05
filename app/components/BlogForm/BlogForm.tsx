@@ -6,6 +6,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Image,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -17,10 +18,9 @@ import {
   useSubmit,
 } from "@remix-run/react";
 
+import { IconFileCv } from "@tabler/icons-react";
 import { Blog, BlogErrors, User } from "~/types";
 import classes from "./BlogForm.module.css";
-import { useState } from "react";
-import { IconFileCv } from "@tabler/icons-react";
 
 interface BlogFormProps {
   blog?: Blog;
@@ -30,8 +30,6 @@ interface BlogFormProps {
 const BlogForm = ({ type, blog }: BlogFormProps) => {
   const actionData = useActionData<{ errors?: BlogErrors }>();
   const formErrors = actionData?.errors || {};
-
-  const [value, setValue] = useState<File | null>(null);
 
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== "idle";
@@ -49,6 +47,10 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
 
   return (
     <Stack mt={50} gap={20} pb={50} w="100%">
+      {blog && blog.image_url && (
+        <Image src={blog.image_url} alt="blog image" />
+      )}
+
       <Title ta="center" className={classes.title}>
         {type === "create" ? "Let your thoughts flow" : "Edit post"}
       </Title>
@@ -92,8 +94,6 @@ const BlogForm = ({ type, blog }: BlogFormProps) => {
             label="Feature Image"
             name="featured_image"
             placeholder="Please select an image for your blog post"
-            value={value}
-            onChange={setValue}
             accept="image/png,image/jpeg"
             // error="Invalid name"
             rightSection={

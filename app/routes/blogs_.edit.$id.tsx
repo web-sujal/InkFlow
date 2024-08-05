@@ -1,4 +1,4 @@
-import { readItem, updateItem } from "@directus/sdk";
+import { readItem, updateItem, uploadFiles } from "@directus/sdk";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -7,13 +7,11 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { ValidationError } from "yup";
 
 import BlogForm from "~/components/BlogForm/BlogForm";
 import directus from "~/lib/directus.server";
-import { Blog, BlogErrors } from "~/types";
-import { createBlogErrorObj } from "~/utils/helpers";
-import { blogSchema } from "~/validations/BlogValidation";
+import { getSession } from "~/sessions";
+import { Blog } from "~/types";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const id = params.id;
@@ -34,33 +32,80 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  console.log("blog_.edit.&id action lol");
   const id = params.id;
   invariant(id, "Missing id in params");
 
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
+  // fetch userId from session cookie
+  const session = getSession(request.headers.get("cookie"));
+  const userId = (await session).get("userId");
 
+  const formData = await request.formData();
+
+  // extracting details form formData
   const title = String(formData.get("title"));
   const content = String(formData.get("content"));
   const full_name = String(formData.get("full_name"));
+  const featured_image = formData.get("featured_image") as File;
 
-  const blog = { title, content, full_name };
+  console.log("edit: ", {
+    title,
+    content,
+    full_name,
+    featured_image,
+    id,
+    userId,
+  });
+
+  let imageId: string | undefined;
 
   try {
-    await blogSchema.validate(data, { abortEarly: false });
+    // update blog if no image is provided
+    if (!featured_image.size) {
+      console.log("inside no featured img if block");
+      const newBlogWithoutImg = {
+        title,
+        content,
+        full_name,
+      };
+
+      await directus.request(updateItem("Blogs", id, newBlogWithoutImg));
+      console.log("inside no featured img if block: success");
+      return redirect("/blogs");
+    }
+
+    // upate blog when image is provided
+    if (featured_image.size && featured_image instanceof Blob) {
+      console.log("inside featured img if block");
+
+      const imageData = new FormData();
+      imageData.append("file", featured_image);
+
+      userId && imageData.append("uploaded_by", userId);
+
+      const result = await directus.request(uploadFiles(imageData));
+      console.log("inside featured img upload if block: success");
+      imageId = result.id;
+    }
+
+    const image_url = `${process.env.DIRECTUS_URL}/assets/${imageId}`;
+    console.log("image_url: ", image_url); // getting a working url for img
+
+    const newBlog = {
+      title,
+      content,
+      full_name,
+      featured_image: imageId,
+      image_url,
+    };
 
     // save to directus
-    await directus.request(updateItem("Blogs", id, blog));
+    console.log("initiating all upadte");
+    await directus.request(updateItem("Blogs", id, newBlog));
+    console.log("initiating all upadte success");
 
     return redirect("/blogs");
   } catch (error) {
     console.log("Error while creating blog: ", (error as Error).message);
-    if (error instanceof ValidationError) {
-      const errors: BlogErrors = createBlogErrorObj(error);
-      return json({ errors }, { status: 400 });
-    }
-
     return json(
       { errors: { unknown_error: "An unknown error occurred" } },
       { status: 500 }
