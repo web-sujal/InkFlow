@@ -46,7 +46,7 @@ const BlogCard = ({ blog }: BlogCardProps) => {
               {blog.full_name}
             </Text>
 
-            {/* edit and delete blog */}
+            {/* edit blog */}
             {user.userId === blog.author && (
               <Group gap="lg">
                 <Center>
