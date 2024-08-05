@@ -75,15 +75,12 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     // upate blog when image is provided
     if (featured_image.size && featured_image instanceof Blob) {
-      console.log("inside featured img if block");
-
       const imageData = new FormData();
       imageData.append("file", featured_image);
 
       userId && imageData.append("uploaded_by", userId);
 
       const result = await directus.request(uploadFiles(imageData));
-      console.log("inside featured img upload if block: success");
       imageId = result.id;
     }
 
@@ -99,10 +96,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     };
 
     // save to directus
-    console.log("initiating all upadte");
     await directus.request(updateItem("Blogs", id, newBlog));
-    console.log("initiating all upadte success");
-
     return redirect("/blogs");
   } catch (error) {
     console.log("Error while creating blog: ", (error as Error).message);
